@@ -1,36 +1,17 @@
-package Sprint1;
+package crossBrowsers;
 
-import java.time.Duration;
+import java.io.IOException;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.chrome.ChromeDriver;
-import org.openqa.selenium.chrome.ChromeOptions;
-import org.openqa.selenium.support.ui.Select;
+import org.testng.annotations.DataProvider;
+import org.testng.annotations.Test;
 
-import io.github.bonigarcia.wdm.WebDriverManager;
+public class S01_53_CreateNewCase extends CB_BaseClass {
 
-public class S01_53_CreateNewCase {
-
-	public static void main(String[] args) throws InterruptedException {
-
-		WebDriverManager.chromedriver().setup();
-		ChromeOptions options = new ChromeOptions();
-		options.addArguments("--disable-notifications");
-
-		ChromeDriver driver = new ChromeDriver(options);
-
-		// Login to https://login.salesforce.com
-
-		driver.get("https://login.salesforce.com");
-		driver.manage().window().maximize();
-		driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(30));
-
-		// Login
-		driver.findElement(By.id("username")).sendKeys("fullstack@testleaf.com");
-		driver.findElement(By.id("password")).sendKeys("SelBootcamp$123");
-		driver.findElement(By.id("Login")).click();
+	@Test(dataProvider = "fetchData")
+	public void runCreateNewCase(String subj, String description) throws InterruptedException {
 
 		// Click on toggle menu button from the left corner
 		driver.findElement(By.xpath("//div[@class='slds-icon-waffle']")).click();
@@ -59,7 +40,7 @@ public class S01_53_CreateNewCase {
 		JavascriptExecutor executor1 = (JavascriptExecutor) driver;
 		executor1.executeScript("arguments[0].click();", newCase);
 
-		// Choose Contact Name from the dropdown
+		// Choose Contact Name from the drop down
 		Thread.sleep(2000);
 		driver.findElement(By.xpath("//input[@title='Search Contacts']")).sendKeys("gout");
 		Thread.sleep(1000);
@@ -75,11 +56,11 @@ public class S01_53_CreateNewCase {
 		driver.findElement(By.xpath("(//input[@class='slds-input slds-combobox__input'])[2]")).click();
 		driver.findElement(By.xpath("//span[@title='Escalated']")).click();
 
-		// Enter Subject as 'Testing' and description as 'Dummy'
+		// Enter Subject and description
 		WebElement subject = driver.findElement(By.xpath("(//input[@class=' input'])[6]"));
 		Thread.sleep(3000);
-		subject.sendKeys("Testing");
-		driver.findElement(By.xpath("//textarea[@class=' textarea']")).sendKeys("Dummy");
+		subject.sendKeys(subj);
+		driver.findElement(By.xpath("//textarea[@class=' textarea']")).sendKeys(description);
 
 		// Click Save
 		driver.findElement(By.xpath("(//span[text()='Save'])[2]")).click();
@@ -102,5 +83,12 @@ public class S01_53_CreateNewCase {
 		} else {
 			System.out.println("New Case is not created");
 		}
+	}
+
+	@DataProvider(name="fetchData")
+	public String[][] sendData() throws IOException {
+
+		CB_ReadExcel re = new CB_ReadExcel();
+		return re.readData("CreateNewCase");
 	}
 }

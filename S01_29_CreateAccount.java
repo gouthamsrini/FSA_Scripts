@@ -1,39 +1,17 @@
-package Sprint1;
+package crossBrowsers;
 
-import java.time.Duration;
+import java.io.IOException;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.chrome.ChromeDriver;
-import org.openqa.selenium.chrome.ChromeOptions;
+import org.testng.annotations.DataProvider;
+import org.testng.annotations.Test;
 
-import io.github.bonigarcia.wdm.WebDriverManager;
+public class S01_29_CreateAccount extends CB_BaseClass {
 
-public class S01_29_CreateAccount {
-
-	public static void main(String[] args) throws InterruptedException {
-
-		WebDriverManager.chromedriver().setup();
-		ChromeOptions options = new ChromeOptions();
-		options.addArguments("--disable-notifications");
-
-		ChromeDriver driver = new ChromeDriver(options);
-
-		// Login to https://login.salesforce.com
-
-		driver.get("https://login.salesforce.com");
-		driver.manage().window().maximize();
-		driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(30));
-
-		// Enter user name
-		driver.findElement(By.id("username")).sendKeys("fullstack@testleaf.com");
-
-		// Enter Password
-		driver.findElement(By.id("password")).sendKeys("SelBootcamp$123");
-
-		// Click Login
-		driver.findElement(By.id("Login")).click();
+	@Test(dataProvider = "fetchData")
+	public void runCreateAccount(String name, String closeDate) throws InterruptedException {
 
 		// Click on toggle menu button from the left corner
 		driver.findElement(By.xpath("//div[@class='slds-icon-waffle']")).click();
@@ -49,7 +27,6 @@ public class S01_29_CreateAccount {
 		driver.findElement(
 				By.xpath("//p[@title='Manage your sales process with accounts, leads, opportunities, and more']"))
 				.click();
-		// driver.findElement(By.xpath("(//mark[text()='Sales'])[3]"));
 
 		// Click Opportunity
 		Thread.sleep(2000);
@@ -63,12 +40,12 @@ public class S01_29_CreateAccount {
 		// Enter Opportunity name as 'Sales force Automation by Your Name,Get the text
 		// and Store it
 		WebElement assignedName = driver.findElement(By.xpath("//input[@name='Name']"));
-		assignedName.sendKeys("Salesforce Automation by Goutham");
+		assignedName.sendKeys(name);
 		assignedName.getText();
 		System.out.println("The given opportunity name is" + assignedName);
 
 		// chose close date
-		driver.findElement(By.xpath("//input[@name='CloseDate']")).sendKeys("9/24/2021");
+		driver.findElement(By.xpath("//input[@name='CloseDate']")).sendKeys(closeDate);
 
 		// select Stage
 		driver.findElement(By.xpath("//label[text()='Stage']/following-sibling::div//input")).click();
@@ -88,7 +65,7 @@ public class S01_29_CreateAccount {
 		String actualText = message.getText();
 		System.out.println(actualText);
 
-		// verify account is created 
+		// verify account is created
 		String Expected = "Salesforce Automation by Goutham";
 
 		if (actualText.contains(Expected)) {
@@ -96,5 +73,12 @@ public class S01_29_CreateAccount {
 		} else {
 			System.out.println("Account is not created");
 		}
+	}
+
+	@DataProvider(name = "fetchData")
+	public String[][] sendData() throws IOException {
+
+		CB_ReadExcel re = new CB_ReadExcel();
+		return re.readData("CreateAccount");
 	}
 }
