@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE suite SYSTEM "https://testng.org/testng-1.0.dtd">
+<suite name="Suite">
+
+<parameter name="url" value="https://login.salesforce.com" ></parameter>
+<parameter name="username" value="fullstack@testleaf.com" ></parameter>
+<parameter name="password" value="SelBootcamp$123" ></parameter>
+
+  <test thread-count="2"  name="Test" verbose="5" parallel="classes" >
+    <classes>
+      <class name="Tstng.S01_29_CreateAccount"/>
+      <class name="Tstng.S01_53_CreateNewCase"/>
+    </classes>
+  </test> <!-- Test -->
+</suite> <!-- Suite -->
