@@ -9,7 +9,7 @@
   <test thread-count="2"  name="Test" verbose="5" parallel="classes" >
     <classes>
       <class name="Tstng.S01_29_CreateAccount"/>
-      <class name="Tstng.S01_53_CreateNewCase"/>
+      <!-- <class name="Tstng.S01_53_CreateNewCase"/> -->
     </classes>
   </test> <!-- Test -->
 </suite> <!-- Suite -->
